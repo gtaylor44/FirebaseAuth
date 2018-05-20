@@ -2,7 +2,7 @@
 
 # Firebase Token Authorization for C#
 
-This library was created because Firebase does not have great support for C#. In this implementation, validation takes place within the Authorization pipeline. Public keys for signature verification are extracted from https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com as per documenation. The ID token is signed by the private key corresponding to the token's kid claim. The max-age in the Cache-Control header of the response is cached in memory using an absolute caching policy to reduce latency and unneccessary web requests. 
+In this implementation, validation takes place within the Authorization pipeline. Public keys for signature verification are extracted from https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com as per documenation. The ID token is signed by the private key corresponding to the token's kid claim. The max-age in the Cache-Control header of the response is cached in memory using an absolute caching policy to reduce latency and unneccessary web requests. 
 
 More info on verifying Firebase tokens with 3rd party libraries can be found here:
 https://firebase.google.com/docs/auth/admin/verify-id-tokens
@@ -16,7 +16,6 @@ https://firebase.google.com/docs/auth/admin/verify-id-tokens
 ```csharp
         public void ConfigureServices(IServiceCollection services)
         {
-
             // required for Firebase Auth
             void options(FirebaseAuthenticationOptions o)
             {
@@ -35,4 +34,34 @@ https://firebase.google.com/docs/auth/admin/verify-id-tokens
 
             services.AddMvc();
         }
+        
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            // required for Firebase Auth
+            app.UseAuthentication();
+
+            app.UseMvc();
+        }
 ```
+
+3. For all actions/controllers, you can now start using the ```csharp [Authorize]``` filter. 
+
+4. On the client side you will need to add an "Authorize" header to your requests. Prepend the token with "Bearer ".
+
+```javascript
+    this.unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        user.getIdToken(true).then(function (token) {
+          const headers = { Authorization: `Bearer ${token}` };
+          
+          // add the above header to your request
+      }
+    });
+```
+
+5. That's it. If you have any questions, please ask.
+
+
+## Tips
+
+You can access claims from User.Claims object.
