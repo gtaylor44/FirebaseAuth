@@ -14,7 +14,7 @@ https://firebase.google.com/docs/auth/admin/verify-id-tokens
 
 ## Installation Instructions
 
-1. Get the Nuget package from here: <URL>
+1. Get the Nuget package from here: https://www.nuget.org/packages/FirebaseAuth/
 
 2. You will need your Firebase Project Id (this can be found in Firebase Console). Ask Google if you have any trouble finding it. In Startup.cs add the following configuration.  
 
@@ -49,9 +49,7 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 }
 ```
 
-3. For all actions/controllers, you can now start using the [Authorize] filter. 
-
-4. On the client side you will need to add an "Authorize" header to your requests. Prepend the token with "Bearer ".
+3. On the client side you will need to add an "Authorize" header to your requests. Prepend the token with "Bearer ".
 
 ```javascript
 this.unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
@@ -63,6 +61,8 @@ this.unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
       }
     });
 ```
+
+4. For all actions/controllers, you can now start guarding with the **[Authorize]** filter. 
 
 5. That's it. If you have any questions, please ask.
 
