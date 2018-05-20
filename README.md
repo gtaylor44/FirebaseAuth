@@ -7,6 +7,11 @@ In this implementation, verification of token takes place within the Authorizati
 More info on verifying Firebase tokens with 3rd party libraries can be found here:
 https://firebase.google.com/docs/auth/admin/verify-id-tokens
 
+## Requirements
+
+.NET Core >= 2.0
+
+
 ## Installation Instructions
 
 1. Get the Nuget package from here: <URL>
