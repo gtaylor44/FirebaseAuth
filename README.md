@@ -44,7 +44,7 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 }
 ```
 
-3. For all actions/controllers, you can now start using the ```csharp [Authorize]``` filter. 
+3. For all actions/controllers, you can now start using the [Authorize] filter. 
 
 4. On the client side you will need to add an "Authorize" header to your requests. Prepend the token with "Bearer ".
 
@@ -66,7 +66,7 @@ this.unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
 
 You can access claims from User.Claims object.
 
-![Firebase Auth Claims Example](https://gregnz.com/images/firebase_auth_claims.png)
+![Firebase Auth Claims Example](https://gregnz.com/images/firebase_auth_claims_v2.png)
 
 There is an extension method of HttpContext for getting the Firebase User Id claim. 
 
