@@ -2,13 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.0.3</Version>
+    <Version>1.0.5</Version>
     <Description>Firebase .NET Token Verification. C# Authorization pipeline implementation for Firebase. See docs for installation instructions.</Description>
     <Company />
     <Authors>Greg Taylor</Authors>
     <PackageIconUrl>https://www.gregnz.com/images/firebase_logo.png</PackageIconUrl>
     <Product>Firebase Auth</Product>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/gtaylor44/FirebaseAuth</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/gtaylor44/FirebaseAuth</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

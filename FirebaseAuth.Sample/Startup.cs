@@ -29,16 +29,16 @@ namespace FirebaseAuth.Sample
                 };
             }
 
-            // Required for Firebase Auth. Please place above AddMvc()
+            // Required for Firebase Auth. Place above AddMvc()
             services.AddAuthentication(o =>
             {
                 o.DefaultScheme = "Default";
             }).AddScheme<FirebaseAuthenticationOptions, FirebaseAuthenticationHandler>("Default", options);
 
+            services.AddMemoryCache();
             services.AddMvc();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -48,6 +48,7 @@ namespace FirebaseAuth.Sample
 
             // required for Firebase Auth
             app.UseAuthentication();
+            
 
             app.UseMvc();
         }

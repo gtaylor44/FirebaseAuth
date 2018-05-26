@@ -2,7 +2,7 @@
 
 # Firebase Token Authorization for C#
 
-In this implementation, verification of token takes place within the Authorization pipeline. Public keys for signature verification are extracted from https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com as per documenation. The ID token is signed by the private key corresponding to the token's kid claim. The max-age in the Cache-Control header of the response is used to cache the request in memory using an absolute caching policy to reduce latency and unneccessary web requests.
+Caches certificate based on max-age in the Cache-Control header of the response to reduce latency and unneccessary web requests.
 
 More info on verifying Firebase tokens with 3rd party libraries can be found here:
 https://firebase.google.com/docs/auth/admin/verify-id-tokens
@@ -73,10 +73,10 @@ You can access claims from User.Claims object.
 
 ![Firebase Auth Claims Example](https://gregnz.com/images/firebase_auth_claims_v2.png)
 
-There is an extension method of HttpContext for getting the Firebase User Id claim. 
+There is an extension method of ClaimsPrincipal for getting the Firebase User Id claim. 
 
 ```csharp
 using FirebaseAuth;
 
-var userId = HttpContext.GetFirebaseUserId();
+var userId = User.GetFirebaseUserId();
 ```
