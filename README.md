@@ -79,22 +79,17 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 ```csharp
 public void ConfigureServices(IServiceCollection services)
 {
-    // required for Firebase Auth
-    void options(FirebaseAuthenticationOptions o)
-    {
-        o.SignInWithCustomTokenMode = true;
-        o.ClientEmail = "your client email. This is the client_email field.";
-        o.ExceptionLogger = (Exception ex) =>
-        {
-            // set up exception logging here.
-        };
-    }
+
+    // If you're using Identity - include this statement.
+    JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
     // Required for Firebase Auth. Place above AddMvc()
     services.AddAuthentication(o =>
     {
-        o.DefaultScheme = "Default";
-    }).AddScheme<FirebaseAuthenticationOptions, FirebaseAuthenticationHandler>("Default", options);
+        o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    }).AddScheme<FirebaseAuthenticationOptions, FirebaseAuthenticationHandler>(JwtBearerDefaults.AuthenticationScheme,           firebaseAuthOptions);
 
     services.AddMvc();
 }
@@ -138,18 +133,3 @@ firebase.auth().onAuthStateChanged(function (user) {
 For all actions/controllers, you can now start guarding with the **[Authorize]** filter. You can also specify Roles.  
 
 That's it. If you have any questions, please ask.
-
-
-## Tips
-
-You can access claims from User.Claims object.
-
-![Firebase Auth Claims Example](https://gregnz.com/images/firebase_auth_claims_v2.png)
-
-There is also an extension method of ClaimsPrincipal for getting the Firebase User Id claim. 
-
-```csharp
-using FirebaseAuth;
-
-var userId = User.GetFirebaseUserId();
-```
