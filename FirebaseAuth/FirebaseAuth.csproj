@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.0.5</Version>
-    <Description>Firebase .NET Token Verification. C# Authorization pipeline implementation for Firebase. See docs for installation instructions.</Description>
+    <Version>2.0.0</Version>
+    <Description>Firebase .NET Token Generation and Verification. See docs for installation instructions and usage.</Description>
     <Company />
     <Authors>Greg Taylor</Authors>
     <PackageIconUrl>https://www.gregnz.com/images/firebase_logo.png</PackageIconUrl>
@@ -11,9 +11,13 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/gtaylor44/FirebaseAuth</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gtaylor44/FirebaseAuth</RepositoryUrl>
+    <PackageReleaseNotes>2.0
+Added ability to generate token for Firebase v3
+This enables ability to use the firebase.auth().signInWithCustomToken(token) method.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="jose-jwt" Version="2.4.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Core" Version="2.0.3" />
@@ -21,6 +25,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.0.4" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.0.2" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.2.2" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.2" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.2.2" />
     <PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
   </ItemGroup>

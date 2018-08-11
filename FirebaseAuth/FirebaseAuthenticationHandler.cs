@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
@@ -18,7 +19,7 @@ namespace FirebaseAuth
 
     public class FirebaseAuthenticationHandler : AuthenticationHandler<FirebaseAuthenticationOptions>
     {
-        public IServiceProvider ServiceProvider { get; set; }
+        private IServiceProvider ServiceProvider { get; set; }
 
         public FirebaseAuthenticationHandler(IOptionsMonitor<FirebaseAuthenticationOptions> options, 
             ILoggerFactory logger,
@@ -27,13 +28,33 @@ namespace FirebaseAuth
             IServiceProvider serviceProvider)
             : base(options, logger, encoder, clock)
         {
-            ServiceProvider = serviceProvider;
+            ServiceProvider = serviceProvider;        
+        }
+
+        private void ValidateOptions()
+        {
+            if (Options.SignInWithCustomTokenMode)
+            {
+                if (string.IsNullOrWhiteSpace(Options.ClientEmail))
+                {
+                    throw new FirebaseAuthException($"ClientEmail is required when {nameof(Options.SignInWithCustomTokenMode)} is TRUE");
+                }
+            }
+
+            else if (!Options.SignInWithCustomTokenMode)
+            {
+                if (string.IsNullOrWhiteSpace(Options.FirebaseProjectId))
+                {
+                    throw new FirebaseAuthException($"Firebase project id is required when {nameof(Options.SignInWithCustomTokenMode)} is FALSE");
+                }
+            }
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             try
             {
+
                 Request.Headers.TryGetValue("Authorization", out var authHeader);
 
                 if (!authHeader.Any())
@@ -54,14 +75,19 @@ namespace FirebaseAuth
 
                 var parameters = new TokenValidationParameters
                 {
-                    ValidIssuer = "https://securetoken.google.com/" + Options.FirebaseProjectId,
-                    ValidAudience = Options.FirebaseProjectId,
+                    ValidIssuer = Options.SignInWithCustomTokenMode ? Options.ClientEmail : "https://securetoken.google.com/" + Options.FirebaseProjectId,
+                    ValidAudience = Options.SignInWithCustomTokenMode ? "https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit" : Options.FirebaseProjectId,
                     IssuerSigningKeys = keys,
+                    RequireExpirationTime = true
                 };
+
                 // 3. Use JwtSecurityTokenHandler to validate signature, issuer, audience and lifetime
                 var handler = new JwtSecurityTokenHandler();
+
                 SecurityToken token;
+
                 ClaimsPrincipal principal = handler.ValidateToken(authHeaderValue, parameters, out token);
+
                 var jwt = (JwtSecurityToken)token;
                 // 4.Validate signature algorithm and other applicable valdiations
                 if (jwt.Header.Alg != SecurityAlgorithms.RsaSha256)
@@ -79,6 +105,11 @@ namespace FirebaseAuth
             }
             catch (Exception ex)
             {
+                if (Options.ExceptionLogger == null)
+                {
+                    throw new FirebaseAuthException($"No exception logger has been set. Original exception message: {ex.Message}");
+                }
+
                 Options.ExceptionLogger(ex);
                 return AuthenticateResult.Fail("Failed to authorize user");
             }
@@ -99,7 +130,9 @@ namespace FirebaseAuth
                 BaseAddress = new Uri("https://www.googleapis.com/robot/v1/metadata/")
             };
 
-            HttpResponseMessage response = await client.GetAsync("x509/securetoken@system.gserviceaccount.com");
+            var uri = Options.SignInWithCustomTokenMode ? $"x509/{WebUtility.UrlEncode(Options.ClientEmail)}" : "x509/securetoken@system.gserviceaccount.com";
+
+            HttpResponseMessage response = await client.GetAsync(uri);
             response.EnsureSuccessStatusCode();
 
             var x509Data = await response.Content.ReadAsAsync<Dictionary<string, string>>();
