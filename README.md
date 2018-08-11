@@ -38,6 +38,8 @@ public void ConfigureServices(IServiceCollection services)
         o.DefaultScheme = "Default";
     }).AddScheme<FirebaseAuthenticationOptions, FirebaseAuthenticationHandler>("Default", options);
 
+    // Add memory cache
+    services.AddMemoryCache();
     services.AddMvc();
 }
         
@@ -91,6 +93,8 @@ public void ConfigureServices(IServiceCollection services)
         o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     }).AddScheme<FirebaseAuthenticationOptions, FirebaseAuthenticationHandler>(JwtBearerDefaults.AuthenticationScheme,           firebaseAuthOptions);
 
+    // Add memory cache
+    services.AddMemoryCache();
     services.AddMvc();
 }
         
