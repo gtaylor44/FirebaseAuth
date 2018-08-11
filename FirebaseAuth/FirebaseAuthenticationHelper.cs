@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 
 namespace FirebaseAuth
 {
@@ -38,7 +39,7 @@ namespace FirebaseAuth
             return GenerateToken(uid, null);
         }
 
-        public string GenerateToken(string uid, Dictionary<string, object> claims)
+        public string GenerateToken(string uid, IEnumerable<Claim> claims)
         {
             // Get the RsaPrivateCrtKeyParameters if we haven't already determined them
             if (_rsaParams == null)
@@ -70,7 +71,13 @@ namespace FirebaseAuth
 
             if (claims != null && claims.Any())
             {
-                payload.Add("claims", claims);
+                foreach(var claim in claims)
+                {
+                    if (!payload.ContainsKey(claim.Type))
+                    {
+                        payload.Add(claim.Type, claim.Value);
+                    }
+                }
             }
 
             return JWT.Encode(payload, Org.BouncyCastle.Security.DotNetUtilities.ToRSA(_rsaParams), JwsAlgorithm.RS256);

@@ -19,16 +19,13 @@ namespace FirebaseAuth
 
     public class FirebaseAuthenticationHandler : AuthenticationHandler<FirebaseAuthenticationOptions>
     {
-        private IServiceProvider ServiceProvider { get; set; }
-
         public FirebaseAuthenticationHandler(IOptionsMonitor<FirebaseAuthenticationOptions> options, 
             ILoggerFactory logger,
             UrlEncoder encoder, 
-            ISystemClock clock, 
-            IServiceProvider serviceProvider)
+            ISystemClock clock)
             : base(options, logger, encoder, clock)
         {
-            ServiceProvider = serviceProvider;        
+   
         }
 
         private void ValidateOptions()
@@ -55,6 +52,8 @@ namespace FirebaseAuth
             try
             {
 
+                ValidateOptions();
+
                 Request.Headers.TryGetValue("Authorization", out var authHeader);
 
                 if (!authHeader.Any())
@@ -78,7 +77,7 @@ namespace FirebaseAuth
                     ValidIssuer = Options.SignInWithCustomTokenMode ? Options.ClientEmail : "https://securetoken.google.com/" + Options.FirebaseProjectId,
                     ValidAudience = Options.SignInWithCustomTokenMode ? "https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit" : Options.FirebaseProjectId,
                     IssuerSigningKeys = keys,
-                    RequireExpirationTime = true
+                    RequireExpirationTime = true,
                 };
 
                 // 3. Use JwtSecurityTokenHandler to validate signature, issuer, audience and lifetime
@@ -89,6 +88,7 @@ namespace FirebaseAuth
                 ClaimsPrincipal principal = handler.ValidateToken(authHeaderValue, parameters, out token);
 
                 var jwt = (JwtSecurityToken)token;
+
                 // 4.Validate signature algorithm and other applicable valdiations
                 if (jwt.Header.Alg != SecurityAlgorithms.RsaSha256)
                 {

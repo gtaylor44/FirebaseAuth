@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Logging;
 
 namespace FirebaseAuth.Sample
 {
@@ -19,7 +18,6 @@ namespace FirebaseAuth.Sample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            IdentityModelEventSource.ShowPII = true;
             // required for Firebase Auth
             void options(FirebaseAuthenticationOptions o)
             {
