@@ -21,7 +21,7 @@ namespace FirebaseAuth.Sample
             // required for Firebase Auth
             void options(FirebaseAuthenticationOptions o)
             {
-                o.FirebaseProjectId = "journeytracker44";
+                o.FirebaseProjectId = "your proejct id";
                 o.ExceptionLogger = (Exception ex) =>
                 {
                     // set up exception logging here.
