@@ -51,7 +51,9 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     app.UseMvc();
 }
 ```
-### Generating a token for firebase method signInWithCustomToken
+### Generating a token for firebase method signInWithCustomToken (optional)
+
+If your primary authentication store is not Firebase and you want to use some features of Firebase that needs authentication, you can generate Firebase compatible tokens and use the signInWithCustomToken.
 
 1. In Firebase console click the cog in top left corner and then go to "Users and permissions".
 
