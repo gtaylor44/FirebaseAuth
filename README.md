@@ -55,27 +55,27 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 
 1. In Firebase console click the cog in top left corner and then go to "Users and permissions".
 
-2.1 Click on the "Service Accounts" tab at the top. 
+2. Click on the "Service Accounts" tab at the top. 
 
-2.2 Click on "Manage all service accounts".
+3. Click on "Manage all service accounts".
 
-2.3 Click "Create service account".
+4. Click "Create service account".
 
-2.4 Enter a Service account name.
+5. Enter a Service account name.
 
-2.5 For Project role, select "Project -> Editor".
+6. For Project role, select "Project -> Editor".
 
-2.6 Tick the check box "Furnish a new private key".
+7. Tick the check box "Furnish a new private key".
 
-2.7 Select the key type "JSON" (it should already be selected).
+8. Select the key type "JSON" (it should already be selected).
 
-2.8 Click save and open the downloaded JSON file. 
+9. Click save and open the downloaded JSON file. 
 
-2.9 Take note of the "private_key" and "client_email" values. You might want to put these into appsettings.json. 
+10. Take note of the "private_key" and "client_email" values. You might want to put these into appsettings.json. 
 
-3. Generating a token. To generate a token, you will need your private_key and client_email. Also note that the maximum expiry for a custom Firebase token is 60 minutes. You might want to think about a refresh token strategy. 
+11. Generating a token. To generate a token, you will need your private_key and client_email. Also note that the maximum expiry for a custom Firebase token is 60 minutes. You might want to think about a refresh token strategy. 
 
-3.1 Instantiate a new instance of FirebaseAuthenticationHelper.
+12. Instantiate a new instance of FirebaseAuthenticationHelper.
 
 Here is example usage...
 
