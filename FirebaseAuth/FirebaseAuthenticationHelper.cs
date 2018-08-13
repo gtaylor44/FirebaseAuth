@@ -71,13 +71,8 @@ namespace FirebaseAuth
 
             if (claims != null && claims.Any())
             {
-                foreach(var claim in claims)
-                {
-                    if (!payload.ContainsKey(claim.Type))
-                    {
-                        payload.Add(claim.Type, claim.Value);
-                    }
-                }
+                var customClaims = claims.ToDictionary((x) => x.Type, (y) => (object)y.Value);
+                payload.Add("claims", customClaims);
             }
 
             return JWT.Encode(payload, Org.BouncyCastle.Security.DotNetUtilities.ToRSA(_rsaParams), JwsAlgorithm.RS256);

@@ -21,8 +21,7 @@ namespace FirebaseAuth.Sample
             // required for Firebase Auth
             void options(FirebaseAuthenticationOptions o)
             {
-                o.SignInWithCustomTokenMode = true;
-                o.ClientEmail = "your client email";
+                o.FirebaseProjectId = "journeytracker44";
                 o.ExceptionLogger = (Exception ex) =>
                 {
                     // set up exception logging here.

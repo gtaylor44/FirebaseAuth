@@ -19,31 +19,20 @@ namespace FirebaseAuth
 
     public class FirebaseAuthenticationHandler : AuthenticationHandler<FirebaseAuthenticationOptions>
     {
-        public FirebaseAuthenticationHandler(IOptionsMonitor<FirebaseAuthenticationOptions> options, 
+        public FirebaseAuthenticationHandler(IOptionsMonitor<FirebaseAuthenticationOptions> options,
             ILoggerFactory logger,
-            UrlEncoder encoder, 
+            UrlEncoder encoder,
             ISystemClock clock)
             : base(options, logger, encoder, clock)
         {
-   
+
         }
 
         private void ValidateOptions()
         {
-            if (Options.SignInWithCustomTokenMode)
+            if (string.IsNullOrWhiteSpace(Options.FirebaseProjectId))
             {
-                if (string.IsNullOrWhiteSpace(Options.ClientEmail))
-                {
-                    throw new FirebaseAuthException($"ClientEmail is required when {nameof(Options.SignInWithCustomTokenMode)} is TRUE");
-                }
-            }
-
-            else if (!Options.SignInWithCustomTokenMode)
-            {
-                if (string.IsNullOrWhiteSpace(Options.FirebaseProjectId))
-                {
-                    throw new FirebaseAuthException($"Firebase project id is required when {nameof(Options.SignInWithCustomTokenMode)} is FALSE");
-                }
+                throw new FirebaseAuthException($"Firebase project id is required.");
             }
         }
 
@@ -74,8 +63,8 @@ namespace FirebaseAuth
 
                 var parameters = new TokenValidationParameters
                 {
-                    ValidIssuer = Options.SignInWithCustomTokenMode ? Options.ClientEmail : "https://securetoken.google.com/" + Options.FirebaseProjectId,
-                    ValidAudience = Options.SignInWithCustomTokenMode ? "https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit" : Options.FirebaseProjectId,
+                    ValidIssuer = "https://securetoken.google.com/" + Options.FirebaseProjectId,
+                    ValidAudience = Options.FirebaseProjectId,
                     IssuerSigningKeys = keys,
                     RequireExpirationTime = true,
                 };
@@ -99,7 +88,7 @@ namespace FirebaseAuth
 
                 return AuthenticateResult.Success(ticket);
             }
-            catch(SecurityTokenExpiredException)
+            catch (SecurityTokenExpiredException)
             {
                 return AuthenticateResult.Fail("Authorization token has expired.");
             }
@@ -130,9 +119,7 @@ namespace FirebaseAuth
                 BaseAddress = new Uri("https://www.googleapis.com/robot/v1/metadata/")
             };
 
-            var uri = Options.SignInWithCustomTokenMode ? $"x509/{WebUtility.UrlEncode(Options.ClientEmail)}" : "x509/securetoken@system.gserviceaccount.com";
-
-            HttpResponseMessage response = await client.GetAsync(uri);
+            HttpResponseMessage response = await client.GetAsync("x509/securetoken@system.gserviceaccount.com");
             response.EnsureSuccessStatusCode();
 
             var x509Data = await response.Content.ReadAsAsync<Dictionary<string, string>>();
@@ -151,7 +138,7 @@ namespace FirebaseAuth
             return keys;
         }
 
-        private DateTimeOffset GetDateTimeOffset(DateTimeOffset dateOfResponse, DateTimeOffset maxAge) 
+        private DateTimeOffset GetDateTimeOffset(DateTimeOffset dateOfResponse, DateTimeOffset maxAge)
         {
             return DateTime.MaxValue;
         }
