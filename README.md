@@ -25,7 +25,6 @@ public void ConfigureServices(IServiceCollection services)
     void options(FirebaseAuthenticationOptions o)
     {
         o.FirebaseProjectId = "your project id (can be found in firebase console)";
-        o.SignInWithCustomTokenMode = false;
         o.ExceptionLogger = (Exception ex) =>
         {
             // Set up exception logging here. 
