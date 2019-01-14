@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.1;netstandard2.0</TargetFrameworks>
-    <Version>2.0.4</Version>
+    <Version>2.0.5</Version>
     <Description>Firebase .NET Token Generation and Verification. This library supports Firebase v3. See docs for installation instructions and usage.</Description>
     <Company />
     <Authors>Greg Taylor</Authors>
